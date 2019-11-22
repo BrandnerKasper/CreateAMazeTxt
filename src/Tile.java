@@ -38,6 +38,14 @@ class TilePosition{
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     //We override the default equals Method, so the position of two TilePosition will be compared not the instance!
     @Override
     public boolean equals(Object o) {
