@@ -1,6 +1,9 @@
 public class Program {
     public static void main(String[] args) {
-        System.out.println("hallo");
+        Maze maze = new Maze(12,17);
+
+        String output = maze.getMazeAsString();
+        System.out.println(output);
 
     }
 }
