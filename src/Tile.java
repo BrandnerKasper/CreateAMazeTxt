@@ -18,8 +18,8 @@ public class Tile {
 
 class TilePosition{
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public TilePosition(int x, int y) {
         this.x = x;
@@ -34,12 +34,12 @@ class TilePosition{
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    @Override
+    public String toString() {
+        return "TilePosition{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     //We override the default equals Method, so the position of two TilePosition will be compared not the instance!

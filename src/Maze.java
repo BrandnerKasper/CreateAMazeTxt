@@ -6,7 +6,9 @@ public class Maze {
     private int height;
     private int width;
 
-    public List<Tile> mazeList = new ArrayList<>(height * width);
+    private int rowCounter;
+
+    private List<Tile> mazeList = new ArrayList<>(height * width);
 
 
     public Maze(int height, int width) {
@@ -19,6 +21,23 @@ public class Maze {
         fillAlgorithm();
     }
 
+    /**
+     * initialize a maze(height*width) with empty tiles(".")
+     * <pre>
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * ....................
+     * </pre>
+     */
     private void initEmptyMaze() {
         for (int i = height - 1; i >= 0; i--) {
             for (int j = 0; j < width; j++) {
@@ -28,6 +47,23 @@ public class Maze {
         }
     }
 
+    /**
+     * creates walls("#") at the edge of the maze
+     * <pre>
+     * ####################
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * #..................#
+     * ####################
+     * </pre>
+     */
     private void makeWallsAround() {
         for (Tile tile : mazeList) {
             if (tile.getPosition().getX() == 0 || tile.getPosition().getY() == 0 || tile.getPosition().getX() == width - 1 || tile.getPosition().getY() == height - 1) {
@@ -37,12 +73,28 @@ public class Maze {
     }
 
     private void randomlyChooseWalls() {
-        int rowCounter=0;
-        randomlyFillEverySecondRow(rowCounter);
-        fillInTheRowsBetween(rowCounter);
+        randomlyFillEverySecondRow();
+        fillInTheRowsBetween();
     }
 
-    private void randomlyFillEverySecondRow(int rowCounter) {
+    /**
+     * Sets walls to 50% every Second row
+     * <pre>
+     * ####################
+     * #...##..#..###.##..#
+     * #..................#
+     * #.#.#..#..##.###...#
+     * #..................#
+     * #....#.##.#####.####
+     * #..................#
+     * #....#...###.##.####
+     * #..................#
+     * #..##...##.#.#.....#
+     * #..................#
+     * ####################
+     * </pre>
+     */
+    private void randomlyFillEverySecondRow() {
         int random = (Math.random() <= 0.5) ? 1 : 2;
         rowCounter = random;
         for (int i = rowCounter; i < height - 1; i += 2) {
@@ -55,8 +107,24 @@ public class Maze {
         }
     }
 
-    //looks in every second row and fills up all tiles where height+1/-1 is a wall
-    private void fillInTheRowsBetween(int rowCounter) {
+    /**
+     * looks in every second row and fills up all tiles where height+1/-1 is a wall
+     * <pre>
+     * ####################
+     * #...##..#..###.##..#
+     * #...#......#.#.#...#
+     * #.#.#..#..##.###...#
+     * #......#..##.##....#
+     * #....#.##.#####.####
+     * #....#....##.##.####
+     * #....#...###.##.####
+     * #........#.#.#.....#
+     * #..##...##.#.#.....#
+     * #..................#
+     * ####################
+     * </pre>
+     */
+    private void fillInTheRowsBetween() {
         for (int i = rowCounter + 1; i < height - 1; i += 2) {
             for (int j = 2; j <= width - 1; j++) {
                 TilePosition tilePosition = new TilePosition(j, i);
@@ -70,19 +138,35 @@ public class Maze {
     private boolean isTileUpAndDownWall(TilePosition position) {
         Tile tileOneUP = getTileAtPosition(new TilePosition(position.getX(), position.getY() + 1));
         Tile tileOneDown = getTileAtPosition(new TilePosition(position.getX(), position.getY() - 1));
-        if (tileOneUP.getContent().equals("#") && tileOneDown.getContent().equals("#")) {
-            return true;
-        }
-        return false;
+        return tileOneUP.getContent().equals("#") && tileOneDown.getContent().equals("#");
     }
 
-    //This function filles the maze so that there are no 2x2 fields of Tiles with no walls -> no turnaround are possible
+    /**
+     * This function filles the maze so that there are no 2x2 fields of Tiles with no walls -> no turnaround are possible
+     */
     private void fillAlgorithm() {
         fixBigPlaza();
         randomlyFixSmallPlaza();
     }
 
-    // A big plaza is 3x3 field of Tiles with no walls
+    /**
+     * A big plaza is 3x3 field of Tiles with no walls, like this:
+     * <pre>
+     * #####
+     * #...#
+     * #...#
+     * #...#
+     * #####
+     * </pre>
+     * and gets fixed like this:
+     * <pre>
+     * #####
+     * #...#
+     * #.#.#
+     * #...#
+     * #####
+     * </pre>
+     */
     private void fixBigPlaza() {
         for (int i = 1; i < height - 1; i++) {
             for (int j = 2; j < width - 1; j++) {
@@ -105,11 +189,26 @@ public class Maze {
         return true;
     }
 
-    //A small plaza is a 2x2 field of Tiles with no walls
-    //Small plazas can be filled in 4 different ways (top left, top right, down left, down right)-> we use this to further randomize how our mazes get filled.
+    /**
+     * A small plaza is a 2x2 field of Tiles with no walls like this:
+     * <pre>
+     * ####
+     * #..#
+     * #..#
+     * ####
+     * </pre>
+     * Small plazas can be filled in 4 different ways (top left, top right, down left, down right) and can look like this:
+     * <pre>
+     * ####
+     * #.##
+     * #..#
+     * ####
+     * </pre>
+     * -> we use this to further randomize how our mazes get filled.
+     */
     private void randomlyFixSmallPlaza(){
         for (int i = 1; i < height - 1; i++) {
-            for (int j = 2; j < width - 1; j++) {
+            for (int j = 1; j < width - 1; j++) {
                 TilePosition position = new TilePosition(j, i);
                 if (isThereASmallPlaza(position)){
                     int randomYPosition = (Math.random() <= 0.5) ? 0 : 1;
@@ -132,10 +231,7 @@ public class Maze {
     }
 
     private boolean isTileEmpty(TilePosition position) {
-        if (getTileAtPosition(position).getContent().equals(".")) {
-            return true;
-        }
-        return false;
+        return getTileAtPosition(position).getContent().equals(".");
     }
 
     private Tile getTileAtPosition(TilePosition position) {
@@ -144,18 +240,18 @@ public class Maze {
                 return tile;
             }
         }
-        return null;
+        throw new IllegalArgumentException("invalid position: " + position.toString());
     }
 
     public String getMazeAsString() {
-        String mazeString = "";
+        StringBuilder mazeString = new StringBuilder();
         for (int i = height - 1; i >= 0; i--) {
             for (int j = 0; j < width; j++) {
                 Tile tile = getTileAtPosition(new TilePosition(j, i));
-                mazeString += tile.getContent();
+                mazeString.append(tile.getContent());
             }
-            mazeString += "\n";
+            mazeString.append("\n");
         }
-        return mazeString;
+        return mazeString.toString();
     }
 }
