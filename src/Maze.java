@@ -60,14 +60,14 @@ public class Maze {
         for (int i = rowCounter + 1; i < height - 1; i += 2) {
             for (int j = 2; j <= width - 1; j++) {
                 TilePosition tilePosition = new TilePosition(j, i);
-                if (checkIfUpAndDownIsWall(tilePosition)) {
+                if (isTileUpAndDownWall(tilePosition)) {
                     getTileAtPosition(tilePosition).setContent("#");
                 }
             }
         }
     }
 
-    private boolean checkIfUpAndDownIsWall(TilePosition position) {
+    private boolean isTileUpAndDownWall(TilePosition position) {
         Tile tileOneUP = getTileAtPosition(new TilePosition(position.getX(), position.getY() + 1));
         Tile tileOneDown = getTileAtPosition(new TilePosition(position.getX(), position.getY() - 1));
         if (tileOneUP.getContent().equals("#") && tileOneDown.getContent().equals("#")) {
@@ -76,10 +76,10 @@ public class Maze {
         return false;
     }
 
+    //This function filles the maze so that there are no 2x2 fields of Tiles with no walls -> no turnaround are possible
     private void fillAlgorithm() {
         fixBigPlaza();
         randomlyFixSmallPlaza();
-
     }
 
     // A big plaza is 3x3 field of Tiles with no walls
@@ -105,6 +105,8 @@ public class Maze {
         return true;
     }
 
+    //A small plaza is a 2x2 field of Tiles with no walls
+    //Small plazas can be filled in 4 different ways (top left, top right, down left, down right)-> we use this to further randomize how our mazes get filled.
     private void randomlyFixSmallPlaza(){
         for (int i = 1; i < height - 1; i++) {
             for (int j = 2; j < width - 1; j++) {

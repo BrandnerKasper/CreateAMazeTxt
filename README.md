@@ -1,5 +1,5 @@
 # CreateAMazeTxt
-This Java project creates random mazes(width & height can be adjusted) and safes them as a txt file.
+This Java project creates random mazes(height*width can be adjusted) and safes them as a txt file.
 The only condition for the mazes are that there are no plazas which means there is no 2x2 tile filed with no walls.
 -> This guarantes that in a game like PacMan Ms.Pacman can`t make a turnaround.
 Mazes can look like the following:
