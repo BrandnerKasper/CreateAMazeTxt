@@ -1,13 +1,9 @@
-import java.util.Objects;
-
 public class Tile {
 
-    private int ID;
     private String content;
     private TilePosition position;
 
-    public Tile(int ID, String content, TilePosition position) {
-        this.ID = ID;
+    public Tile(String content, TilePosition position) {
         this.content = content;
         this.position = position;
     }

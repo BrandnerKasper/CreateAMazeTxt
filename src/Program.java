@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 public class Program {
     public static void main(String[] args) {
-        Maze maze = new Maze(32,47);
+        Maze maze = new Maze(8,20);
 
         String output = maze.getMazeAsString();
         System.out.println(output);
